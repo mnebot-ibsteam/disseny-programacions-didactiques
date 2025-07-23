@@ -5,7 +5,7 @@
 [![Flask](https://img.shields.io/badge/Flask-framework-black?logo=flask)](https://flask.palletsprojects.com/)
 [![License](https://img.shields.io/badge/Llicència-MIT-green)](LICENSE)
 
-<img src="./static/logo_conselleria.png" width="200"/>
+<a href="https://ibsteam.caib.es"><img src="./static/ibsteam_logo_white.png" style="height: 20%; width:20%;"/></a>
 
 ---
 
