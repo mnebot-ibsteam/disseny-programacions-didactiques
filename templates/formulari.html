@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulari dinàmic</title>
+    <script>
+        let estructura = JSON.parse(`{{ estructura_json | safe }}`);
+        let sabersJson = JSON.parse(`{{ sabers_json | safe }}`);
+        const concrecionsMap = {};  // Saber => [concrecions]
+
+        function actualitzaMateries() {
+            const curs = document.getElementById("curs").value;
+            const materiaSelect = document.getElementById("materia");
+            materiaSelect.innerHTML = "";
+
+            if (estructura[curs]) {
+                const materies = Object.keys(estructura[curs]);
+                materies.forEach(materia => {
+                    const opt = document.createElement("option");
+                    opt.value = materia;
+                    opt.textContent = materia;
+                    materiaSelect.appendChild(opt);
+                });
+
+                actualitzaFormulari(); // recarrega dades
+            }
+        }
+
+        function actualitzaFormulari() {
+            const curs = document.getElementById("curs").value;
+            const materia = document.getElementById("materia").value;
+            const ceDiv = document.getElementById("competencies");
+            const criterisDiv = document.getElementById("criteris");
+            const sabersDiv = document.getElementById("sabers");
+            const concrecionsUl = document.getElementById("concrecions");
+
+            ceDiv.innerHTML = "";
+            criterisDiv.innerHTML = "";
+            sabersDiv.innerHTML = "";
+            concrecionsUl.innerHTML = "";
+            Object.keys(concrecionsMap).forEach(k => delete concrecionsMap[k]);
+
+            if (estructura[curs] && estructura[curs][materia]) {
+                const ce_dict = estructura[curs][materia];
+
+                let ul = document.createElement("ul");
+                for (let ce in ce_dict) {
+                    let li = document.createElement("li");
+                    li.textContent = ce;
+
+                    let hiddenInput = document.createElement("input");
+                    hiddenInput.type = "hidden";
+                    hiddenInput.name = "competencies";
+                    hiddenInput.value = ce;
+
+                    li.appendChild(hiddenInput);
+                    ul.appendChild(li);
+                }
+                ceDiv.appendChild(ul);
+
+                for (let ce in ce_dict) {
+                    let label = document.createElement("strong");
+                    label.textContent = ce;
+                    criterisDiv.appendChild(label);
+                    criterisDiv.appendChild(document.createElement("br"));
+
+                    ce_dict[ce].forEach(criteri => {
+                        let checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.name = "criteris";
+                        checkbox.value = criteri;
+
+                        let span = document.createElement("span");
+                        span.textContent = " " + criteri;
+
+                        criterisDiv.appendChild(checkbox);
+                        criterisDiv.appendChild(span);
+                        criterisDiv.appendChild(document.createElement("br"));
+                    });
+
+                    criterisDiv.appendChild(document.createElement("br"));
+                }
+            }
+
+            if (curs && materia) {
+                fetch(`/get_sabers?curs=${encodeURIComponent(curs)}&materia=${encodeURIComponent(materia)}`)
+                    .then(response => response.json())
+                    .then(sabers => {
+                        sabers.forEach(saber => {
+                            let checkbox = document.createElement("input");
+                            checkbox.type = "checkbox";
+                            checkbox.name = "sabers";
+                            checkbox.value = saber;
+
+                            let span = document.createElement("span");
+                            span.textContent = " " + saber;
+
+                            sabersDiv.appendChild(checkbox);
+                            sabersDiv.appendChild(span);
+                            sabersDiv.appendChild(document.createElement("br"));
+                        });
+                    });
+            }
+        }
+
+        window.onload = function () {
+            actualitzaMateries(); // inicia amb el primer curs seleccionat
+        };
+    </script>
+</head>
+<body>
+    <h2>Formulari per a {{ nivell }}</h2>
+    <form method="post">
+        <input type="hidden" name="nivell" value="{{ nivell }}">
+
+        <label for="curs">Curs:</label>
+{% if nivell == 'Educació infantil' %}
+<p style="color: darkred; font-style: italic;">
+    * En Educació infantil, aquesta selecció "Curs" esdevé "Cicle", és a dir, tria entre 1r i 2n cicle segons correspongui.
+</p>
+{% endif %}
+        <select id="curs" name="curs" onchange="actualitzaMateries()">
+            {% for curs in cursos %}
+                <option value="{{ curs }}">{{ curs }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="materia">Matèria:</label>
+        <select id="materia" name="materia" onchange="actualitzaFormulari()">
+            <!-- S'omplirà dinàmicament amb JS -->
+        </select>
+
+        <h3>Competències específiques</h3>
+        <div id="competencies"></div>
+
+        <h3>Criteris d'avaluació</h3>
+        <div id="criteris"></div>
+
+        <h3>Sabers relacionats</h3>
+        <div id="sabers"></div>
+
+        <!--<h3>Concrecions (opcional)</h3>-->
+        <ul id="concrecions"></ul>
+
+        <button type="submit">Generar informe</button>
+    </form>
+</body>
+</html>
+
+{% endblock %}

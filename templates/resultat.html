@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultat</title>
+</head>
+<body>
+    <h2>Resum de la teva selecció</h2>
+    <ul>
+        <li><strong>Nivell:</strong> {{ dades.nivell }}</li>
+        <li><strong>Curs:</strong> {{ dades.curs }}</li>
+        <li><strong>Matèria:</strong> {{ dades.materia }}</li>
+        <li><strong>Competències específiques:</strong>
+            <ul>
+            {% for ce in dades.competencies %}
+                <li>{{ ce }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+        <li><strong>Criteris d'avaluació:</strong>
+            <ul>
+            {% for cr in dades.criteris %}
+                <li>{{ cr }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+        <li><strong>Sabers bàsics:</strong>
+            <ul>
+            {% for sb in dades.sabers %}
+                <li>{{ sb }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+        {% if dades.concrecions %}
+<!--<li><strong>Concrecions dels sabers seleccionats:</strong>-->
+    <ul>
+    {% for c in dades.concrecions %}
+        <li>{{ c }}</li>
+    {% endfor %}
+    </ul>
+</li>
+{% endif %}
+
+    </ul>
+      <!-- Modificat per apuntar al fitxer generat amb UUID -->
+    <a href="/{{ doc }}" download style="background-color:#2196F3; color:white; padding:10px 20px; border:none; border-radius:5px; text-decoration:none;">
+        Descarregar informe generat en DOCX
+    </a>
+  
+</body>
+</html>
+
+{% endblock %}

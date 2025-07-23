@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Inici</title>
+</head>
+<body>
+    <h1>Disseny de programacions didàctiques</h1>
+    <hr style="width: 100%; border: 1px solid #000000;">
+    <h3>Eina dissenyada per a la simplificació del procés de creació de la teva programació didàctica tot seguint el currículum oficial de les Illes Balears.</h3>  
+    <p>Al final del procés tendràs un <b>esborrany</b> que podràs <b>anar completant amb les característiques del teu centre i el teu alumnat</b>.</p>
+    <hr style="width: 100%; border: 1px solid #000000;">
+    
+    <h2><p>Selecciona el nivell educatiu</p></h2>
+    <form method="post">
+        <select name="nivell">
+            {% for n in nivells %}
+                <option value="{{n}}">{{n}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Següent</button>
+    </form>
+</body>
+</html>
+
+{% endblock %}
