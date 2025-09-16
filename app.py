@@ -77,22 +77,28 @@ def formulari():
 
 @app.route('/get_sabers')
 def get_sabers():
-    curs = request.args.get('curs')
-    materia = request.args.get('materia')
+    nivell = (request.args.get('nivell') or '').strip()
+    curs = (request.args.get('curs') or '').strip()
+    materia = (request.args.get('materia') or '').strip()
     if not curs or not materia:
         return jsonify([])
 
-    # Normalitzam valors del DataFrame per evitar problemes amb espais o majúscules
     df = sabers_df.copy()
+    # Normalitza espais i majúscules
+    df['Nivell'] = df['Nivell'].astype(str).str.strip()
     df['Curs'] = df['Curs'].astype(str).str.strip()
     df['Matèria'] = df['Matèria'].astype(str).str.strip()
-    df['Saber bàsic'] = df['Saber bàsic'].astype(str).str.strip()
 
-    sabers = df[
-        (df['Curs'] == curs.strip()) &
-        (df['Matèria'] == materia.strip())
-    ]['Saber bàsic'].dropna().unique().tolist()
-
+    sabers = (
+        df[
+            (df['Nivell'].str.casefold() == nivell.casefold()) &
+            (df['Curs'] == curs) &
+            (df['Matèria'] == materia)
+        ]['Saber bàsic']
+        .dropna()
+        .drop_duplicates()
+        .tolist()
+    )
     return jsonify(sabers)
 
 
