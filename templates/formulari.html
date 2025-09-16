@@ -10,12 +10,14 @@
         let estructura = JSON.parse(`{{ estructura_json | safe }}`);
         let sabersJson = JSON.parse(`{{ sabers_json | safe }}`);
         const concrecionsMap = {};  // Saber => [concrecions]
+        const NIVELL = "{{ nivell }}";  // <-- Afegit: passem aquest valor a la fetch
 
         function actualitzaMateries() {
             const curs = document.getElementById("curs").value;
             const materiaSelect = document.getElementById("materia");
             materiaSelect.innerHTML = "";
 
+            // estructura està ja filtrada per nivell al servidor, així que té forma estructura[curs][materia]
             if (estructura[curs]) {
                 const materies = Object.keys(estructura[curs]);
                 materies.forEach(materia => {
@@ -86,7 +88,8 @@
             }
 
             if (curs && materia) {
-                fetch(`/get_sabers?curs=${encodeURIComponent(curs)}&materia=${encodeURIComponent(materia)}`)
+                // <-- Modificat: afegim nivell a la query
+                fetch(`/get_sabers?nivell=${encodeURIComponent(NIVELL)}&curs=${encodeURIComponent(curs)}&materia=${encodeURIComponent(materia)}`)
                     .then(response => response.json())
                     .then(sabers => {
                         sabers.forEach(saber => {
