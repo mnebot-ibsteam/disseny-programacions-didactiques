@@ -138,8 +138,7 @@ def generar_docx(dades, nom_fitxer='informe.docx'):
          "millorar la pràctica docent). Explica també què avaluaràs (aprenentatges de l’alumnat, la teva tasca com a docent i la mateixa programació) i " 
          "quins agents participaran (alumnat, equip docent, famílies…).\n"
          "Indica clarament els instruments que faràs servir per recollir evidències: rúbriques (per a autoavaluació, coavaluació i heteroavaluació), llistes " 
-         "de control, portafolis, observació directa o enquestes de valoració. Finalment, especifica el sistema de qualificació qualitativa que aplicaràs, "
-         "detallant com definiràs els nivells d’assoliment dels criteris d’avaluació i quina ponderació assignaràs a cada un d’ells, seguint la normativa vigent."),
+         "de control, portafolis, observació directa o enquestes de valoració."),
         ("4. ESTRATÈGIES DIDÀCTIQUES I METODOLÒGIQUES: ORGANITZACIÓ, RECURSOS, AGRUPAMENTS, CRITERIS PER A L’ELABORACIÓ DE SITUACIONS I ACTIVITATS QUE ES CONSIDERIN NECESSÀRIES.",
          "Per emplenar aquest apartat, posa atenció en les indicacions que et proposam. Pots esborrar aquesta part en acabar:\n\n"
          "En aquest apartat has de descriure les opcions metodològiques que guiaran la teva pràctica docent, assegurant que estiguin alineades amb els principis pedagògics de l’etapa "
